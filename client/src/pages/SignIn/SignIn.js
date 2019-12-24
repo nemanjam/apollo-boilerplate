@@ -1,19 +1,12 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
 
 import { SignUpLink } from '../SignUp/SignUp';
 import * as routes from '../../constants/routes';
 import ErrorMessage from '../../components/Error/Error';
 
-const SIGN_IN = gql`
-  mutation($login: String!, $password: String!) {
-    signIn(login: $login, password: $password) {
-      token
-    }
-  }
-`;
+import { SIGN_IN } from '../../graphql/mutations';
 
 const SignIn = ({ history, refetch }) => (
   <div>

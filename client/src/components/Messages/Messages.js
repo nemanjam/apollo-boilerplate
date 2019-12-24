@@ -1,47 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
 
 import MessageDelete from '../MessageDelete/MessageDelete';
 import Loading from '../Loading/Loading';
 import withSession from '../../session/withSession';
 
-const MESSAGE_CREATED = gql`
-  subscription {
-    messageCreated {
-      message {
-        id
-        text
-        createdAt
-        user {
-          id
-          username
-        }
-      }
-    }
-  }
-`;
-
-const GET_PAGINATED_MESSAGES_WITH_USERS = gql`
-  query($cursor: String, $limit: Int!) {
-    messages(cursor: $cursor, limit: $limit)
-      @connection(key: "MessagesConnection") {
-      edges {
-        id
-        text
-        createdAt
-        user {
-          id
-          username
-        }
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
-    }
-  }
-`;
+import { GET_PAGINATED_MESSAGES_WITH_USERS } from '../../graphql/queries';
+import { MESSAGE_CREATED } from '../../graphql/subscriptions';
 
 const Messages = ({ limit }) => (
   <Query

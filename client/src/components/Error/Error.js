@@ -1,9 +1,9 @@
 import React from 'react';
 
-const ErrorMessage = ({ error }) => (
+const Error = ({ error }) => (
   <div>
     <small>{error.message}</small>
   </div>
 );
 
-export default ErrorMessage;
+export default Error;

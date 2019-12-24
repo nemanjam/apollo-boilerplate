@@ -1,22 +1,8 @@
 import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
 
 import ErrorMessage from '../Error/Error';
-
-const CREATE_MESSAGE = gql`
-  mutation($text: String!) {
-    createMessage(text: $text) {
-      id
-      text
-      createdAt
-      user {
-        id
-        username
-      }
-    }
-  }
-`;
+import { CREATE_MESSAGE } from '../../graphql/mutations';
 
 class MessageCreate extends Component {
   state = {

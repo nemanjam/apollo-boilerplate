@@ -1,31 +1,7 @@
 import React from 'react';
 import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
-
-const GET_ALL_MESSAGES_WITH_USERS = gql`
-  query {
-    messages(order: "DESC") @connection(key: "MessagesConnection") {
-      edges {
-        id
-        text
-        createdAt
-        user {
-          id
-          username
-        }
-      }
-      pageInfo {
-        hasNextPage
-      }
-    }
-  }
-`;
-
-const DELETE_MESSAGE = gql`
-  mutation($id: ID!) {
-    deleteMessage(id: $id)
-  }
-`;
+import { GET_ALL_MESSAGES_WITH_USERS } from '../../graphql/queries';
+import { DELETE_MESSAGE } from '../../graphql/mutations';
 
 const MessageDelete = ({ message }) => (
   <Mutation
