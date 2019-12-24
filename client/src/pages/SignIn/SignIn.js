@@ -15,7 +15,7 @@ const SIGN_IN = gql`
   }
 `;
 
-const SignInPage = ({ history, refetch }) => (
+const SignIn = ({ history, refetch }) => (
   <div>
     <h1>SignIn</h1>
     <SignInForm history={history} refetch={refetch} />
@@ -85,6 +85,6 @@ class SignInForm extends Component {
   }
 }
 
-export default withRouter(SignInPage);
+export default withRouter(SignIn);
 
 export { SignInForm };

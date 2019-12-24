@@ -21,7 +21,7 @@ const INITIAL_STATE = {
   passwordConfirmation: '',
 };
 
-const SignUpPage = ({ history, refetch }) => (
+const SignUp = ({ history, refetch }) => (
   <div>
     <h1>SignUp</h1>
     <SignUpForm history={history} refetch={refetch} />
@@ -117,6 +117,6 @@ const SignUpLink = () => (
   </p>
 );
 
-export default withRouter(SignUpPage);
+export default withRouter(SignUp);
 
 export { SignUpForm, SignUpLink };
