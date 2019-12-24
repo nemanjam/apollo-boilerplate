@@ -106,6 +106,7 @@ connectDb().then(async () => {
 });
 
 const createUsersWithMessages = async date => {
+  console.log('seeding...');
   const user1 = new models.User({
     username: 'rwieruch',
     email: 'hello@robin.com',
