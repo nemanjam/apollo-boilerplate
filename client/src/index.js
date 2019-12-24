@@ -9,8 +9,8 @@ import { WebSocketLink } from 'apollo-link-ws';
 import { onError } from 'apollo-link-error';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 
-import App from './components/App';
-import { signOut } from './components/SignOut';
+import Routes from './Routes';
+import { signOut } from './components/SignOutButton/SignOutButton';
 
 const httpLink = new HttpLink({
   uri: 'http://localhost:8000/graphql',
@@ -79,7 +79,7 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <App />
+    <Routes />
   </ApolloProvider>,
   document.getElementById('root'),
 );

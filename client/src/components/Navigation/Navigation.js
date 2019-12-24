@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import * as routes from '../../constants/routes';
-import SignOutButton from '../SignOut';
+import SignOutButton from '../SignOutButton/SignOutButton';
 
 const Navigation = ({ session }) => (
   <div>
@@ -22,13 +22,11 @@ const NavigationAuth = ({ session }) => (
     <li>
       <Link to={routes.ACCOUNT}>Account ({session.me.username})</Link>
     </li>
-    {session &&
-      session.me &&
-      session.me.role === 'ADMIN' && (
-        <li>
-          <Link to={routes.ADMIN}>Admin</Link>
-        </li>
-      )}
+    {session && session.me && session.me.role === 'ADMIN' && (
+      <li>
+        <Link to={routes.ADMIN}>Admin</Link>
+      </li>
+    )}
     <li>
       <SignOutButton />
     </li>

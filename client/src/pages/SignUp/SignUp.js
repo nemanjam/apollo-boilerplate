@@ -4,7 +4,7 @@ import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import * as routes from '../../constants/routes';
-import ErrorMessage from '../Error';
+import ErrorMessage from '../../components/Error/Error';
 
 const SIGN_UP = gql`
   mutation($username: String!, $email: String!, $password: String!) {

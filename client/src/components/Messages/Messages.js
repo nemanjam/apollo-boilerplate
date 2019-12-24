@@ -2,9 +2,9 @@ import React, { Component, Fragment } from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import MessageDelete from '../MessageDelete';
-import Loading from '../../Loading';
-import withSession from '../../Session/withSession';
+import MessageDelete from '../MessageDelete/MessageDelete';
+import Loading from '../Loading/Loading';
+import withSession from '../../session/withSession';
 
 const MESSAGE_CREATED = gql`
   subscription {
@@ -168,11 +168,9 @@ const MessageItemBase = ({ message, session }) => (
     <small>{message.createdAt}</small>
     <p>{message.text}</p>
 
-    {session &&
-      session.me &&
-      message.user.id === session.me.id && (
-        <MessageDelete message={message} />
-      )}
+    {session && session.me && message.user.id === session.me.id && (
+      <MessageDelete message={message} />
+    )}
   </div>
 );
 

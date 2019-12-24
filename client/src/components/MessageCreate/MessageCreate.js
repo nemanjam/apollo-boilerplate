@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import ErrorMessage from '../../Error';
+import ErrorMessage from '../Error/Error';
 
 const CREATE_MESSAGE = gql`
   mutation($text: String!) {

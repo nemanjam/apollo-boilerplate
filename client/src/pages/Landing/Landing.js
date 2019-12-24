@@ -1,8 +1,9 @@
 import React from 'react';
 
-import withSession from '../Session/withSession';
+import withSession from '../../session/withSession';
 
-import { MessageCreate, Messages } from '../Message';
+import MessageCreate from '../../components/MessageCreate/MessageCreate';
+import Messages from '../../components/Messages/Messages';
 
 const Landing = ({ session }) => (
   <div>
