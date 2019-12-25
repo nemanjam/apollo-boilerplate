@@ -5,6 +5,9 @@ import { Redirect } from 'react-router-dom';
 import * as routes from '../constants/routes';
 import { GET_ME } from './queries';
 
+// withAuthorization(condition)(Component)(props)
+// hoc fja koja prima komponentu kao arg ili vraca
+
 const withAuthorization = conditionFn => Component => props => (
   <Query query={GET_ME}>
     {({ data, networkStatus }) => {
