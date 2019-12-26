@@ -1,18 +1,18 @@
 import React from 'react';
-import { ApolloConsumer } from 'react-apollo';
+import { useApolloClient } from '@apollo/react-hooks';
 
 import * as routes from '../../constants/routes';
 import history from '../../constants/history';
 
-const SignOutButton = () => (
-  <ApolloConsumer>
-    {client => (
-      <button type="button" onClick={() => signOut(client)}>
-        Sign Out
-      </button>
-    )}
-  </ApolloConsumer>
-);
+const SignOutButton = () => {
+  const client = useApolloClient();
+
+  return (
+    <button type="button" onClick={() => signOut(client)}>
+      Sign Out
+    </button>
+  );
+};
 
 const signOut = client => {
   localStorage.removeItem('token');
