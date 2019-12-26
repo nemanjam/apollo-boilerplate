@@ -10,7 +10,7 @@ const MessageCreate = () => {
   const [createMessage, { error }] = useMutation(CREATE_MESSAGE);
 
   const onChange = event => {
-    const { name, value } = event.target;
+    const { value } = event.target;
     setText(value);
   };
 
@@ -18,7 +18,7 @@ const MessageCreate = () => {
     event.preventDefault();
 
     try {
-      const { data } = await createMessage({ variables: { text } });
+      await createMessage({ variables: { text } });
       setText('');
     } catch (error) {}
   };

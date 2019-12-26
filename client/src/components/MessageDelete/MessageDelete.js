@@ -1,13 +1,12 @@
 import React from 'react';
-import { Mutation } from 'react-apollo';
+import { useMutation } from '@apollo/react-hooks';
+
 import { GET_ALL_MESSAGES_WITH_USERS } from '../../graphql/queries';
 import { DELETE_MESSAGE } from '../../graphql/mutations';
 
-const MessageDelete = ({ message }) => (
-  <Mutation
-    mutation={DELETE_MESSAGE}
-    variables={{ id: message.id }}
-    update={cache => {
+const MessageDelete = ({ message }) => {
+  const [deleteMessage] = useMutation(DELETE_MESSAGE, {
+    update(cache) {
       const data = cache.readQuery({
         query: GET_ALL_MESSAGES_WITH_USERS,
       });
@@ -25,14 +24,20 @@ const MessageDelete = ({ message }) => (
           },
         },
       });
-    }}
-  >
-    {(deleteMessage, { data, loading, error }) => (
-      <button type="button" onClick={deleteMessage}>
-        Delete
-      </button>
-    )}
-  </Mutation>
-);
+    },
+  });
+
+  const onClick = async () => {
+    await deleteMessage({
+      variables: { id: message.id },
+    });
+  };
+
+  return (
+    <button type="button" onClick={onClick}>
+      Delete
+    </button>
+  );
+};
 
 export default MessageDelete;
