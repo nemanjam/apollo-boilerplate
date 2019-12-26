@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
+import { ApolloProvider as ApolloHooksProvider } from '@apollo/react-hooks';
 import { ApolloClient } from 'apollo-client';
 import { getMainDefinition } from 'apollo-utilities';
 import { ApolloLink, split } from 'apollo-link';
@@ -79,7 +80,9 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <Routes />
+    <ApolloHooksProvider client={client}>
+      <Routes />
+    </ApolloHooksProvider>
   </ApolloProvider>,
   document.getElementById('root'),
 );

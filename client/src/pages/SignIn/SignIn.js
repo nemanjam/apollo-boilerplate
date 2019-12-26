@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Mutation } from 'react-apollo';
+import { useMutation } from '@apollo/react-hooks';
 
 import { SignUpLink } from '../SignUp/SignUp';
 import * as routes from '../../constants/routes';
@@ -16,67 +16,56 @@ const SignIn = ({ history, refetch }) => (
   </div>
 );
 
-const INITIAL_STATE = {
-  login: '',
-  password: '',
-};
+const SignInForm = ({ history, refetch }) => {
+  const [login, setLogin] = useState('');
+  const [password, setPassword] = useState('');
 
-class SignInForm extends Component {
-  state = { ...INITIAL_STATE };
+  const [signIn, { loading, error }] = useMutation(SIGN_IN);
 
-  onChange = event => {
+  const onChange = event => {
     const { name, value } = event.target;
-    this.setState({ [name]: value });
+    if (name === 'login') setLogin(value);
+    if (name === 'password') setPassword(value);
   };
 
-  onSubmit = (event, signIn) => {
-    signIn().then(async ({ data }) => {
-      this.setState({ ...INITIAL_STATE });
-
-      localStorage.setItem('token', data.signIn.token);
-
-      await this.props.refetch();
-
-      this.props.history.push(routes.LANDING);
-    });
-
+  const onSubmit = async event => {
     event.preventDefault();
+
+    const { data } = await signIn({ variables: { login, password } });
+
+    setLogin('');
+    setPassword('');
+    localStorage.setItem('token', data.signIn.token);
+    await refetch();
+    history.push(routes.LANDING);
   };
 
-  render() {
-    const { login, password } = this.state;
+  const isInvalid = password === '' || login === '';
 
-    const isInvalid = password === '' || login === '';
+  return (
+    <form onSubmit={event => onSubmit(event)}>
+      <input
+        name="login"
+        value={login}
+        onChange={onChange}
+        type="text"
+        placeholder="Email or Username"
+      />
+      <input
+        name="password"
+        value={password}
+        onChange={onChange}
+        type="password"
+        placeholder="Password"
+      />
+      <button disabled={isInvalid || loading} type="submit">
+        Sign In
+      </button>
 
-    return (
-      <Mutation mutation={SIGN_IN} variables={{ login, password }}>
-        {(signIn, { data, loading, error }) => (
-          <form onSubmit={event => this.onSubmit(event, signIn)}>
-            <input
-              name="login"
-              value={login}
-              onChange={this.onChange}
-              type="text"
-              placeholder="Email or Username"
-            />
-            <input
-              name="password"
-              value={password}
-              onChange={this.onChange}
-              type="password"
-              placeholder="Password"
-            />
-            <button disabled={isInvalid || loading} type="submit">
-              Sign In
-            </button>
-
-            {error && <ErrorMessage error={error} />}
-          </form>
-        )}
-      </Mutation>
-    );
-  }
-}
+      {error && <ErrorMessage error={error} />}
+    </form>
+  );
+};
 
 export default withRouter(SignIn);
 
