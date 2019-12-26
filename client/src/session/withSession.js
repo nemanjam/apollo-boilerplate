@@ -1,5 +1,4 @@
 import React from 'react';
-import { Query } from 'react-apollo';
 import { useQuery } from '@apollo/react-hooks';
 import { GET_ME } from './queries';
 
