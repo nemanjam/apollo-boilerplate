@@ -1,74 +1,62 @@
-import React, { Component } from 'react';
-import { Mutation } from 'react-apollo';
+import React, { useState } from 'react';
+import { useMutation } from '@apollo/react-hooks';
 
 import ErrorMessage from '../Error/Error';
 import { CREATE_MESSAGE } from '../../graphql/mutations';
 
-class MessageCreate extends Component {
-  state = {
-    text: '',
-  };
+const MessageCreate = () => {
+  const [text, setText] = useState('');
 
-  onChange = event => {
+  const [createMessage, { error }] = useMutation(CREATE_MESSAGE);
+
+  const onChange = event => {
     const { name, value } = event.target;
-    this.setState({ [name]: value });
+    setText(value);
   };
 
-  onSubmit = async (event, createMessage) => {
+  const onSubmit = async event => {
     event.preventDefault();
 
     try {
-      await createMessage();
-      this.setState({ text: '' });
+      const { data } = await createMessage({ variables: { text } });
+      setText('');
     } catch (error) {}
   };
 
-  render() {
-    const { text } = this.state;
+  return (
+    <form onSubmit={event => onSubmit(event)}>
+      <textarea
+        name="text"
+        value={text}
+        onChange={onChange}
+        type="text"
+        placeholder="Your message ..."
+      />
+      <button type="submit">Send</button>
 
-    return (
-      <Mutation
-        mutation={CREATE_MESSAGE}
-        variables={{ text }}
-        // Not used anymore because of Subscription
-
-        // update={(cache, { data: { createMessage } }) => {
-        //   const data = cache.readQuery({
-        //     query: GET_ALL_MESSAGES_WITH_USERS,
-        //   });
-
-        //   cache.writeQuery({
-        //     query: GET_ALL_MESSAGES_WITH_USERS,
-        //     data: {
-        //       ...data,
-        //       messages: {
-        //         ...data.messages,
-        //         edges: [createMessage, ...data.messages.edges],
-        //         pageInfo: data.messages.pageInfo,
-        //       },
-        //     },
-        //   });
-        // }}
-      >
-        {(createMessage, { data, loading, error }) => (
-          <form
-            onSubmit={event => this.onSubmit(event, createMessage)}
-          >
-            <textarea
-              name="text"
-              value={text}
-              onChange={this.onChange}
-              type="text"
-              placeholder="Your message ..."
-            />
-            <button type="submit">Send</button>
-
-            {error && <ErrorMessage error={error} />}
-          </form>
-        )}
-      </Mutation>
-    );
-  }
-}
+      {error && <ErrorMessage error={error} />}
+    </form>
+  );
+};
 
 export default MessageCreate;
+
+// Not used anymore because of Subscription
+
+// update={(cache, { data: { createMessage } }) => {
+//   const data = cache.readQuery({
+//     query: GET_ALL_MESSAGES_WITH_USERS,
+//   });
+
+//   cache.writeQuery({
+//     query: GET_ALL_MESSAGES_WITH_USERS,
+//     data: {
+//       ...data,
+//       messages: {
+//         ...data.messages,
+//         edges: [createMessage, ...data.messages.edges],
+//         pageInfo: data.messages.pageInfo,
+//       },
+//     },
+//   });
+// }}
