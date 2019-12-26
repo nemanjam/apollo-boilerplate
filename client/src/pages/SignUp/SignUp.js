@@ -1,18 +1,11 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { Mutation } from 'react-apollo';
+import { useMutation } from '@apollo/react-hooks';
 
 import * as routes from '../../constants/routes';
 import ErrorMessage from '../../components/Error/Error';
 
 import { SIGN_UP } from '../../graphql/mutations';
-
-const INITIAL_STATE = {
-  username: '',
-  email: '',
-  password: '',
-  passwordConfirmation: '',
-};
 
 const SignUp = ({ history, refetch }) => (
   <div>
@@ -21,88 +14,86 @@ const SignUp = ({ history, refetch }) => (
   </div>
 );
 
-class SignUpForm extends Component {
-  state = { ...INITIAL_STATE };
+const SignUpForm = ({ history, refetch }) => {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordConfirmation, setPasswordConfirmation] = useState(
+    '',
+  );
 
-  onChange = event => {
+  const [signUp, { loading, error }] = useMutation(SIGN_UP);
+
+  const onChange = event => {
     const { name, value } = event.target;
-    this.setState({ [name]: value });
+    if (name === 'username') setUsername(value);
+    if (name === 'email') setEmail(value);
+    if (name === 'password') setPassword(value);
+    if (name === 'passwordConfirmation')
+      setPasswordConfirmation(value);
   };
 
-  onSubmit = (event, signUp) => {
-    signUp().then(async ({ data }) => {
-      this.setState({ ...INITIAL_STATE });
+  const onSubmit = async event => {
+    event.preventDefault();
 
-      localStorage.setItem('token', data.signUp.token);
-
-      await this.props.refetch();
-
-      this.props.history.push(routes.LANDING);
+    const { data } = await signUp({
+      variables: { username, email, password },
     });
 
-    event.preventDefault();
+    setUsername('');
+    setEmail('');
+    setPassword('');
+    setPasswordConfirmation('');
+
+    localStorage.setItem('token', data.signUp.token);
+    await refetch();
+    history.push(routes.LANDING);
   };
 
-  render() {
-    const {
-      username,
-      email,
-      password,
-      passwordConfirmation,
-    } = this.state;
+  const isInvalid =
+    password !== passwordConfirmation ||
+    password === '' ||
+    email === '' ||
+    username === '';
 
-    const isInvalid =
-      password !== passwordConfirmation ||
-      password === '' ||
-      email === '' ||
-      username === '';
+  return (
+    <form onSubmit={event => onSubmit(event)}>
+      <input
+        name="username"
+        value={username}
+        onChange={onChange}
+        type="text"
+        placeholder="Full Name"
+      />
+      <input
+        name="email"
+        value={email}
+        onChange={onChange}
+        type="text"
+        placeholder="Email Address"
+      />
+      <input
+        name="password"
+        value={password}
+        onChange={onChange}
+        type="password"
+        placeholder="Password"
+      />
+      <input
+        name="passwordConfirmation"
+        value={passwordConfirmation}
+        onChange={onChange}
+        type="password"
+        placeholder="Confirm Password"
+      />
+      <button disabled={isInvalid || loading} type="submit">
+        Sign Up
+      </button>
 
-    return (
-      <Mutation
-        mutation={SIGN_UP}
-        variables={{ username, email, password }}
-      >
-        {(signUp, { data, loading, error }) => (
-          <form onSubmit={event => this.onSubmit(event, signUp)}>
-            <input
-              name="username"
-              value={username}
-              onChange={this.onChange}
-              type="text"
-              placeholder="Full Name"
-            />
-            <input
-              name="email"
-              value={email}
-              onChange={this.onChange}
-              type="text"
-              placeholder="Email Address"
-            />
-            <input
-              name="password"
-              value={password}
-              onChange={this.onChange}
-              type="password"
-              placeholder="Password"
-            />
-            <input
-              name="passwordConfirmation"
-              value={passwordConfirmation}
-              onChange={this.onChange}
-              type="password"
-              placeholder="Confirm Password"
-            />
-            <button disabled={isInvalid || loading} type="submit">
-              Sign Up
-            </button>
-
-            {error && <ErrorMessage error={error} />}
-          </form>
-        )}
-      </Mutation>
-    );
-  }
-}
+      {error && <ErrorMessage error={error} />}
+    </form>
+  );
+};
 
 const SignUpLink = () => (
   <p>
