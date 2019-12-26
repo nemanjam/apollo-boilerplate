@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from 'react';
+import React, { useEffect, useCallback, Fragment } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 
 import MessageDelete from '../MessageDelete/MessageDelete';
@@ -9,15 +9,12 @@ import { GET_PAGINATED_MESSAGES_WITH_USERS } from '../../graphql/queries';
 import { MESSAGE_CREATED } from '../../graphql/subscriptions';
 
 const Messages = ({ limit }) => {
-  const {
-    data,
-    loading,
-    error,
-    fetchMore,
-    subscribeToMore,
-  } = useQuery(GET_PAGINATED_MESSAGES_WITH_USERS, {
-    variables: { limit },
-  });
+  const { data, loading, fetchMore, subscribeToMore } = useQuery(
+    GET_PAGINATED_MESSAGES_WITH_USERS,
+    {
+      variables: { limit },
+    },
+  );
 
   if (!data) {
     return (
@@ -92,7 +89,7 @@ const MoreMessagesButton = ({
 );
 
 const MessageList = ({ messages, subscribeToMore }) => {
-  const subscribeToMoreMessage = () => {
+  const subscribeToMoreMessage = useCallback(() => {
     subscribeToMore({
       document: MESSAGE_CREATED,
       updateQuery: (previousResult, { subscriptionData }) => {
@@ -114,11 +111,11 @@ const MessageList = ({ messages, subscribeToMore }) => {
         };
       },
     });
-  };
+  }, [subscribeToMore]);
 
   useEffect(() => {
     subscribeToMoreMessage();
-  }, []);
+  }, [subscribeToMoreMessage]);
 
   return messages.map(message => (
     <MessageItem key={message.id} message={message} />
