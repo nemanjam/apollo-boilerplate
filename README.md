@@ -40,4 +40,4 @@ Server Applications:
 - `cd apollo-boilerplate/server`
 - `npm install`
 - `npm start`
-- visit `http://localhost:3000 for client and http://localhost:8000 for server`
+- visit `http://localhost:3000` for client and `http://localhost:8000` for server
